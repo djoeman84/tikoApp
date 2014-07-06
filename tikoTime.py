@@ -1,9 +1,8 @@
-import sys, json, threading, random
+import sys, json, threading
 sys.path.append('/usr/local/lib/python2.7/site-packages/')
 from flask import Flask
 from flask import request
-from tikoApp import app
-from time import sleep
+from tikoApp.app import TikoApp
 from canvas import Canvas
 from subprocess import Popen
 
@@ -27,16 +26,11 @@ class RunApplicationThread(threading.Thread):
         super(RunApplicationThread, self).__init__()
 
     def run(self):
-        r = lambda: random.randint(0, 255)
-        while True:
-            sleep(random.uniform(0.03, 1))
-            Canvas.clear()
-            Canvas.draw_rect((0, 0), (200, 200), fill_style='#%02X%02X%02X' % (r(), r(), r()))
+        TikoApp().run()
 
 
 if __name__ == '__main__':
     RunApplicationThread().start()
     Popen(['open','http://127.0.0.1:5000/static/index.html','-a','Google Chrome'])
-    app.run()
-    app.TikoApp().run(debug=True)  # does not return
+    app.run(debug=True)
 
